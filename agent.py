@@ -1,8 +1,6 @@
 from langgraph.pregel.remote import RemoteGraph
-from langgraph_supervisor.handoff import create_forward_message_tool
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
-from langgraph.prebuilt import create_react_agent
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -20,9 +18,25 @@ class AgentsConfig(BaseModel):
 class GraphConfigPydantic(BaseModel):
     agents: List[AgentsConfig] = Field(
         default=[],
+        metadata={"x_lg_ui_config": {"type": "agents"}},
+    )
+    model_name: Optional[str] = Field(
+        default="openai/gpt-4o",  # default model
         metadata={
             "x_lg_ui_config": {
-                "type": "agents",
+                "type": "select",
+                "options": [
+                    {"label": "GPT 4o", "value": "openai/gpt-4o"},
+                    {
+                        "label": "Claude 3.7 Sonnet",
+                        "value": "anthropic/claude-3-7-sonnet-latest",
+                    },
+                    {
+                        "label": "Claude 3.5 Sonnet",
+                        "value": "anthropic/claude-3-5-sonnet-latest",
+                    },
+                    {"label": "GPT 4.1", "value": "openai/gpt-4.1"},
+                ],
             }
         },
     )
@@ -39,25 +53,38 @@ class GraphConfigPydantic(BaseModel):
 
 
 def make_child_graphs(cfg: GraphConfigPydantic):
+    """
+    Instantiate a list of RemoteGraph nodes based on the configuration.
+    """
     return [
-        RemoteGraph(deployment_url=agent.deployment_url, agent_id=agent.agent_id)
-        for agent in cfg.agents
+        RemoteGraph(deployment_url=a.deployment_url, agent_id=a.agent_id)
+        for a in cfg.agents
     ]
 
 
+def make_model(cfg: GraphConfigPydantic):
+    """Instantiate the LLM for the supervisor based on the config."""
+    return ChatOpenAI(model="gpt-4o")
+
+
 def make_prompt(cfg: GraphConfigPydantic):
+    """Build the system prompt, falling back to a sensible default."""
     return cfg.system_prompt or (
-        "You are a supervisor agent overseeing a team of specialist agents. "
-        "For each user message, determine if it should be handled by one of your agents—"
-        "if so, call the tool `delegate_to_<agent_id>()` with the user’s original question. "
-        "If not, answer directly."
+        "You are a supervisor AI overseeing a team of specialist agents. "
+        "For each incoming user message, decide if it should be handled by one of your agents. "
+        "If so, invoke the tool `delegate_to_<agent_id>(user_query)`—replacing `<agent_id>` with the agent’s name—"
+        "to hand off control. Otherwise, answer the user yourself."
     )
 
 
+cfg = GraphConfigPydantic()
+
+child_graphs = make_child_graphs(cfg)
+
 supervisor_workflow = create_supervisor(
-    agents=make_child_graphs,
-    model=ChatOpenAI(model="gpt-4o"),
-    prompt=make_prompt,
+    child_graphs,
+    model=make_model(cfg),
+    prompt=make_prompt(cfg),
     config_schema=GraphConfigPydantic,
     handoff_tool_prefix="delegate_to_",
 )
