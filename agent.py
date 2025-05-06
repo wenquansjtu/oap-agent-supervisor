@@ -55,7 +55,7 @@ def make_prompt(cfg: GraphConfigPydantic):
 
 
 supervisor_workflow = create_supervisor(
-    nodes=make_child_graphs,
+    agents=make_child_graphs,
     model=ChatOpenAI(model="gpt-4o"),
     prompt=make_prompt,
     config_schema=GraphConfigPydantic,
