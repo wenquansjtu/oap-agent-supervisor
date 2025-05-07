@@ -4,7 +4,7 @@ langgraph>=0.4.2
 langchain-core 
 langchain-openai 
 langchain-anthropic 
-langgraph-supervisor
+langgraph-supervisor>=0.0.21
 langchain-community 
 scikit-learn 
 openai 
