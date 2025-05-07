@@ -16,6 +16,8 @@ class AgentsConfig(BaseModel):
     """The ID of the agent to use"""
     name: str
     """The name of the agent"""
+    
+
 
 
 class GraphConfigPydantic(BaseModel):
@@ -39,8 +41,17 @@ def make_child_graphs(cfg: GraphConfigPydantic):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
     """
+    import re
+    
+    def sanitize_name(name):
+        # Replace spaces with underscores
+        sanitized = name.replace(" ", "_")
+        # Remove any other disallowed characters (<, >, |, \, /)
+        sanitized = re.sub(r'[<|\\/>]', '', sanitized)
+        return sanitized
+
     return [
-        RemoteGraph(a.agent_id, url=a.deployment_url, name=a.name) for a in cfg.agents
+        RemoteGraph(a.agent_id, url=a.deployment_url, name=sanitize_name(a.name)) for a in cfg.agents
     ]
 
 
