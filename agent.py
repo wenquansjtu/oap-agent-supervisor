@@ -37,7 +37,7 @@ def make_child_graphs(cfg: GraphConfigPydantic):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
     """
-    return [RemoteGraph(name=a.agent_id, url=a.deployment_url) for a in cfg.agents]
+    return [RemoteGraph(a.agent_id, url=a.deployment_url) for a in cfg.agents]
 
 
 def make_model(cfg: GraphConfigPydantic):
