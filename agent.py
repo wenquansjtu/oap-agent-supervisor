@@ -14,6 +14,8 @@ class AgentsConfig(BaseModel):
     """The URL of the LangGraph deployment"""
     agent_id: str
     """The ID of the agent to use"""
+    name: str
+    """The name of the agent"""
 
 
 class GraphConfigPydantic(BaseModel):
@@ -37,7 +39,9 @@ def make_child_graphs(cfg: GraphConfigPydantic):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
     """
-    return [RemoteGraph(a.agent_id, url=a.deployment_url) for a in cfg.agents]
+    return [
+        RemoteGraph(a.agent_id, url=a.deployment_url, name=a.name) for a in cfg.agents
+    ]
 
 
 def make_model(cfg: GraphConfigPydantic):
@@ -48,10 +52,10 @@ def make_model(cfg: GraphConfigPydantic):
 def make_prompt(cfg: GraphConfigPydantic):
     """Build the system prompt, falling back to a sensible default."""
     return cfg.system_prompt or (
-        "You are a supervisor AI overseeing a team of specialist agents. "
-        "For each incoming user message, decide if it should be handled by one of your agents. "
-        "If so, invoke the tool `delegate_to_<agent_id>(user_query)`—replacing `<agent_id>` with the agent’s name—"
-        "to hand off control. Otherwise, answer the user yourself."
+        """You are a supervisor AI overseeing a team of specialist agents. 
+        For each incoming user message, decide if it should be handled by one of your agents. 
+        If so, invoke the tool `delegate_to_<name>(user_query)`—replacing `<name>` with the agent’s name—
+        to hand off control. Otherwise, answer the user yourself."""
     )
 
 
