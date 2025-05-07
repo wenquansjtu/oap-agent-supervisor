@@ -71,7 +71,7 @@ def make_model(cfg: GraphConfigPydantic):
 
 def make_prompt(cfg: GraphConfigPydantic):
     """Build the system prompt, falling back to a sensible default."""
-    return cfg.system_prompt or DEFAULT_SUPERVISOR_PROMPT
+    return cfg.system_prompt
 
 
 def graph(config: RunnableConfig):
