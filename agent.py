@@ -79,4 +79,5 @@ def graph(config: RunnableConfig):
         prompt=make_prompt(cfg),
         config_schema=GraphConfigPydantic,
         handoff_tool_prefix="delegate_to_",
+        output_mode="full_history",
     )
