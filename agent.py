@@ -18,8 +18,6 @@ class AgentsConfig(BaseModel):
     """The name of the agent"""
     
 
-
-
 class GraphConfigPydantic(BaseModel):
     agents: List[AgentsConfig] = Field(
         default=[],
