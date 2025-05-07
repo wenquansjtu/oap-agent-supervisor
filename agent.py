@@ -60,7 +60,7 @@ def make_prompt(cfg: GraphConfigPydantic):
 
 def graph(config: RunnableConfig):
 
-    cfg = GraphConfigPydantic(**config["configurable"])
+    cfg = GraphConfigPydantic(**config.get("configurable", {}))
     child_graphs = make_child_graphs(cfg)
 
     return create_supervisor(
