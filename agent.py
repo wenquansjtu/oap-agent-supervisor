@@ -8,6 +8,16 @@ from langchain_core.runnables import RunnableConfig
 
 load_dotenv()
 
+DEFAULT_SUPERVISOR_PROMPT = """You are a supervisor AI overseeing a team of specialist agents. 
+For each incoming user message, decide if it should be handled by one of your agents. 
+If so, invoke the tool `delegate_to_<name>(user_query)`—replacing `<name>` with the agent’s name—
+to hand off control. Otherwise, answer the user yourself.
+
+The user will see all messages and tool calls produced in the conversation, 
+along with all returned from the sub‑agents. With this in mind, ensure you 
+never repeat any information already presented to the user.
+"""
+
 
 class AgentsConfig(BaseModel):
     deployment_url: str
@@ -24,12 +34,13 @@ class GraphConfigPydantic(BaseModel):
         metadata={"x_lg_ui_config": {"type": "agents"}},
     )
     system_prompt: Optional[str] = Field(
-        default=None,
+        default=DEFAULT_SUPERVISOR_PROMPT,
         metadata={
             "x_lg_ui_config": {
                 "type": "textarea",
                 "placeholder": "Enter a system prompt...",
-                "description": "The system prompt to use in all generations",
+                "description": "The system prompt to use in all generations. If editing, include context about how the agent is a supervisor and how it should behave",
+                "default": DEFAULT_SUPERVISOR_PROMPT,
             }
         },
     )
@@ -60,12 +71,7 @@ def make_model(cfg: GraphConfigPydantic):
 
 def make_prompt(cfg: GraphConfigPydantic):
     """Build the system prompt, falling back to a sensible default."""
-    return cfg.system_prompt or (
-        """You are a supervisor AI overseeing a team of specialist agents. 
-        For each incoming user message, decide if it should be handled by one of your agents. 
-        If so, invoke the tool `delegate_to_<name>(user_query)`—replacing `<name>` with the agent’s name—
-        to hand off control. Otherwise, answer the user yourself."""
-    )
+    return cfg.system_prompt
 
 
 def graph(config: RunnableConfig):
