@@ -58,7 +58,7 @@ def make_prompt(cfg: GraphConfigPydantic):
     )
 
 
-def make_graph(config: RunnableConfig):
+def graph(config: RunnableConfig):
 
     cfg = GraphConfigPydantic(**config["configurable"])
     child_graphs = make_child_graphs(cfg)
