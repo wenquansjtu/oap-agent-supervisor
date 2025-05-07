@@ -16,7 +16,7 @@ class AgentsConfig(BaseModel):
     """The ID of the agent to use"""
     name: str
     """The name of the agent"""
-    
+
 
 class GraphConfigPydantic(BaseModel):
     agents: List[AgentsConfig] = Field(
