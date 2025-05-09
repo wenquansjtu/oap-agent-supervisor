@@ -1,15 +1,32 @@
 # Open Agent Platform Supervisor
 
-A supervisor agent for the LangGraph Open Agent Platform (OAP). This project leverages the built in LangGraph supervisor agent to orchestrate specialist agents via their [RemoteGraph](https://langchain-ai.github.io/langgraph/reference/remote_graph/).
+This project leverages the prebuiltbuilt [LangGraph Supervisor](https://github.com/langchain-ai/langgraph-supervisor-py) agent to orchestrate specialist agents via a [RemoteGraph](https://langchain-ai.github.io/langgraph/reference/remote_graph/).
 
 ## Features
 
 *   **Dynamic Agent Delegation:** The supervisor can decide whether to handle a user query itself or delegate it to a configured specialist agent.
-*   **Configurable Agents:** Easily define and configure multiple child agents, selecting from the list of existing agents you have deployed and configured in OAP.
+*   **Configurable Agents:** Easily define and configure multiple child agents, selecting from the list of existing agents you have deployed and configured in [Open Agent Platform](https://github.com/langchain-ai/open-agent-platform) (OAP).
 *   **Customizable System Prompt:** Tailor the supervisor's behavior and instructions using a configurable system prompt, with a sensible default provided.
 
 ## Deployments
 
+### Local
+
+To run the supervisor locally, 
+
+1. clone this repo
+
+```bash
+gh repo clone langchain-ai/open-agent-supervisor
+```
+
+2. Set your environment variables in `.env`. *Note - We default to OpenAI to provide the underlying supervisor agent LLM*
+3. 
+
+
+### OAP
+
+> [!IMPORTANT]
 > **Prerequisites**: Have at least one supervisor deployed to your instance of LangGraph Platform (LGP) that matches or extends the base implementation provided in this repo
 
 To add a supervisor agent to the platform: 
