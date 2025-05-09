@@ -14,15 +14,29 @@ This project leverages the prebuiltbuilt [LangGraph Supervisor](https://github.c
 
 To run the supervisor locally, 
 
-1. clone this repo
+1. Clone this repo
 
 ```bash
 gh repo clone langchain-ai/open-agent-supervisor
 ```
 
-2. Set your environment variables in `.env`. *Note - We default to OpenAI to provide the underlying supervisor agent LLM*
-3. 
+2. Set your environment variables in `.env`
+     
+   *We default to OpenAI to provide the underlying supervisor agent LLM*
 
+3. Install the in-memory LangGraph command line package
+
+```bash
+pip install -U "langgraph-cli[inmem]"
+```
+
+4. Run the local deployment
+
+```bash
+langgraph dev [OPTIONS]
+```
+
+For more info, see our [docs](https://langchain-ai.github.io/langgraph/cloud/reference/cli/#dev)
 
 ### OAP
 
