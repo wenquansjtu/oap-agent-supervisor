@@ -1,6 +1,6 @@
 # Open Agent Platform Supervisor
 
-This project leverages the prebuiltbuilt [LangGraph Supervisor](https://github.com/langchain-ai/langgraph-supervisor-py) agent to orchestrate specialist agents via a [RemoteGraph](https://langchain-ai.github.io/langgraph/reference/remote_graph/).
+This project leverages the pre-built [LangGraph Supervisor](https://github.com/langchain-ai/langgraph-supervisor-py) agent to orchestrate specialist agents via a [RemoteGraph](https://langchain-ai.github.io/langgraph/reference/remote_graph/).
 
 ## Features
 
@@ -20,23 +20,27 @@ To run the supervisor locally,
 gh repo clone langchain-ai/open-agent-supervisor
 ```
 
-2. Set your environment variables in `.env`
+2. Copy the `.env.example` file into `.env`, and set your environment variables
      
    *We default to OpenAI to provide the underlying supervisor agent LLM*
 
-3. Install the in-memory LangGraph command line package
+```bash
+cp .env.example .env
+```
+
+4. Install the in-memory LangGraph command line package
 
 ```bash
 pip install -U "langgraph-cli[inmem]"
 ```
 
-4. Run the local deployment
+4. Run the LangGraph server locally
 
 ```bash
-langgraph dev [OPTIONS]
+langgraph dev
 ```
 
-For more info, see our [docs](https://langchain-ai.github.io/langgraph/cloud/reference/cli/#dev)
+For more info, see our [LangGraph CLI docs](https://langchain-ai.github.io/langgraph/cloud/reference/cli/#dev)
 
 ### OAP
 
