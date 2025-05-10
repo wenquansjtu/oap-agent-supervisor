@@ -1,9 +1,12 @@
 {
-    "dependencies": [
-        "."
-    ],
-    "graphs": {
-        "agent": "./agent.py:graph"
-    },
-    "env": ".env"
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "agent": "./agent.py:graph"
+  },
+  "env": ".env",
+  "auth": {
+    "path": "./auth.py:auth"
+  }
 }
