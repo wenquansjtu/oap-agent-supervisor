@@ -10,3 +10,4 @@ scikit-learn
 openai 
 ipython
 supabase
+ruff
