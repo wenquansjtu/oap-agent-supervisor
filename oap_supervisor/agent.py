@@ -46,9 +46,16 @@ class GraphConfigPydantic(BaseModel):
     )
 
 
-def make_child_graphs(cfg: GraphConfigPydantic, access_token: str):
+def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = None):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
+    
+    Args:
+        cfg: The configuration for the graph
+        access_token: The Supabase access token for authentication, can be None
+    
+    Returns:
+        A list of RemoteGraph instances
     """
     import re
 
@@ -58,19 +65,25 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: str):
         # Remove any other disallowed characters (<, >, |, \, /)
         sanitized = re.sub(r"[<|\\/>]", "", sanitized)
         return sanitized
-
+    
+    # If no agents in config, return empty list
+    if not cfg.agents:
+        return []
+    
+    # If access_token is None, create headers without token
+    headers = {}
+    if access_token:
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "x-supabase-access-token": access_token,
+        }
+    
     return [
         RemoteGraph(
             a.agent_id,
             url=a.deployment_url,
             name=sanitize_name(a.name),
-            headers={
-                # The Authorization header is required to authenticate the request,
-                # and the x-supabase-access-token header is required to authenticate
-                # the tools
-                "Authorization": f"Bearer {access_token}",
-                "x-supabase-access-token": access_token,
-            },
+            headers=headers,
         )
         for a in cfg.agents
     ]
@@ -88,8 +101,9 @@ def make_prompt(cfg: GraphConfigPydantic):
 
 def graph(config: RunnableConfig):
     cfg = GraphConfigPydantic(**config.get("configurable", {}))
-    supabase_access_token = config.get("x-supabase-access-token")
-
+    supabase_access_token = config.get("configurable", {}).get("x-supabase-access-token")
+    
+    # Pass the token to make_child_graphs, which now handles None values
     child_graphs = make_child_graphs(cfg, supabase_access_token)
 
     return create_supervisor(

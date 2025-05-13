@@ -3,10 +3,10 @@
     "."
   ],
   "graphs": {
-    "agent": "./agent.py:graph"
+    "agent": "./oap_supervisor/agent.py:graph"
   },
   "env": ".env",
   "auth": {
-    "path": "./auth.py:auth"
+    "path": "./oap_supervisor/security/auth.py:auth"
   }
 }
