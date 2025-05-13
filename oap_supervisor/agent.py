@@ -1,12 +1,9 @@
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
-
-load_dotenv()
 
 DEFAULT_SUPERVISOR_PROMPT = """You are a supervisor AI overseeing a team of specialist agents. 
 For each incoming user message, decide if it should be handled by one of your agents. 
