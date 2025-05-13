@@ -3,7 +3,7 @@
     "."
   ],
   "graphs": {
-    "agent": "./oap_supervisor/agent.py:graph"
+    "multi_agent_supervisor": "./oap_supervisor/agent.py:graph"
   },
   "env": ".env",
   "auth": {
