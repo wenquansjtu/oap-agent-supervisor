@@ -42,7 +42,7 @@ langgraph dev
 
 For more info, see our [LangGraph CLI docs](https://langchain-ai.github.io/langgraph/cloud/reference/cli/#dev)
 
-### OAP
+### Open Agent Platform
 
 > [!IMPORTANT]
 > **Prerequisites**: Have at least one supervisor deployed to your instance of LangGraph Platform (LGP) that matches or extends the base implementation provided in this repo
@@ -51,6 +51,8 @@ To add a supervisor agent to the platform:
 1. Navigate to the `Agents` tab in the left menu bar
 2. Create and agent and select the graph deployed to your LGP instance described in the prerequisites above
 3. Give your supervisor a name, description, an optional system prompt if you'd like to modify it and select the agents that it will orchestrate (note -  these agents will need to already be deployed in your LGP instance and configured in Open Agent Platform)
+
+To update the OAP configuration, you can modify the `GraphConfigPydantic` class in the `agent.py` file. OAP will automatically register any changes to this class. You can modify a specific field's properties by editing the `x_oap_ui_config` metadata object. For more information, see the [Open Agent Platform documentation on graph configuration](https://github.com/langchain-ai/open-agent-platform/?tab=readme-ov-file#configuration).
 
 ## How it Works
 
