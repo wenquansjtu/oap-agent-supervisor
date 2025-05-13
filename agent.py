@@ -1,4 +1,3 @@
-import os
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
@@ -47,7 +46,7 @@ class GraphConfigPydantic(BaseModel):
     )
 
 
-def make_child_graphs(cfg: GraphConfigPydantic):
+def make_child_graphs(cfg: GraphConfigPydantic, access_token: str):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
     """
@@ -65,8 +64,13 @@ def make_child_graphs(cfg: GraphConfigPydantic):
             a.agent_id,
             url=a.deployment_url,
             name=sanitize_name(a.name),
-            api_key=os.environ.get("OAP_LANGSMITH_API_KEY"),
-            headers={"x-auth-scheme": "langsmith"},
+            headers={
+                # The Authorization header is required to authenticate the request,
+                # and the x-supabase-access-token header is required to authenticate
+                # the tools
+                "Authorization": f"Bearer {access_token}",
+                "x-supabase-access-token": access_token,
+            },
         )
         for a in cfg.agents
     ]
@@ -84,7 +88,9 @@ def make_prompt(cfg: GraphConfigPydantic):
 
 def graph(config: RunnableConfig):
     cfg = GraphConfigPydantic(**config.get("configurable", {}))
-    child_graphs = make_child_graphs(cfg)
+    supabase_access_token = config.get("x-supabase-access-token")
+
+    child_graphs = make_child_graphs(cfg, supabase_access_token)
 
     return create_supervisor(
         child_graphs,
