@@ -32,12 +32,12 @@ class AgentsConfig(BaseModel):
 class GraphConfigPydantic(BaseModel):
     agents: List[AgentsConfig] = Field(
         default=[],
-        metadata={"x_lg_ui_config": {"type": "agents"}},
+        metadata={"x_oap_ui_config": {"type": "agents"}},
     )
     system_prompt: Optional[str] = Field(
         default=DEFAULT_SUPERVISOR_PROMPT,
         metadata={
-            "x_lg_ui_config": {
+            "x_oap_ui_config": {
                 "type": "textarea",
                 "placeholder": "Enter a system prompt...",
                 "description": f"The system prompt to use in all generations. The following prompt will always be included at the end of the system prompt:\n---{UNEDITABLE_SYSTEM_PROMPT}---",
