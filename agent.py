@@ -65,7 +65,7 @@ def make_child_graphs(cfg: GraphConfigPydantic):
             a.agent_id,
             url=a.deployment_url,
             name=sanitize_name(a.name),
-            api_key=os.environ.get("LANGSMITH_API_KEY"),
+            api_key=os.environ.get("OAP_LANGSMITH_API_KEY"),
             headers={"x-auth-scheme": "langsmith"},
         )
         for a in cfg.agents
