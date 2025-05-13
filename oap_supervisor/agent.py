@@ -5,16 +5,19 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
 
-DEFAULT_SUPERVISOR_PROMPT = """You are a supervisor AI overseeing a team of specialist agents. 
-For each incoming user message, decide if it should be handled by one of your agents. 
-If so, invoke the tool `delegate_to_<name>(user_query)`—replacing `<name>` with the agent’s name—
+# This system prompt is ALWAYS included at the bottom of the message.
+UNEDITABLE_SYSTEM_PROMPT = """\nYou can invoke sub-agents by calling tools in this format:
+`delegate_to_<name>(user_query)`--replacing <name> with the agent's name--
 to hand off control. Otherwise, answer the user yourself.
 
 The user will see all messages and tool calls produced in the conversation, 
-along with all returned from the sub‑agents. With this in mind, ensure you 
+along with all returned from the sub-agents. With this in mind, ensure you 
 never repeat any information already presented to the user.
 """
 
+DEFAULT_SUPERVISOR_PROMPT = """You are a supervisor AI overseeing a team of specialist agents. 
+For each incoming user message, decide if it should be handled by one of your agents. 
+"""
 
 class AgentsConfig(BaseModel):
     deployment_url: str
@@ -36,7 +39,7 @@ class GraphConfigPydantic(BaseModel):
             "x_lg_ui_config": {
                 "type": "textarea",
                 "placeholder": "Enter a system prompt...",
-                "description": "The system prompt to use in all generations. If editing, include context about how the agent is a supervisor and how it should behave",
+                "description": f"The system prompt to use in all generations. The following prompt will always be included at the end of the system prompt:\n---{UNEDITABLE_SYSTEM_PROMPT}---",
                 "default": DEFAULT_SUPERVISOR_PROMPT,
             }
         },
@@ -93,7 +96,7 @@ def make_model(cfg: GraphConfigPydantic):
 
 def make_prompt(cfg: GraphConfigPydantic):
     """Build the system prompt, falling back to a sensible default."""
-    return cfg.system_prompt
+    return cfg.system_prompt + UNEDITABLE_SYSTEM_PROMPT
 
 
 def graph(config: RunnableConfig):
