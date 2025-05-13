@@ -19,6 +19,7 @@ DEFAULT_SUPERVISOR_PROMPT = """You are a supervisor AI overseeing a team of spec
 For each incoming user message, decide if it should be handled by one of your agents. 
 """
 
+
 class AgentsConfig(BaseModel):
     deployment_url: str
     """The URL of the LangGraph deployment"""
