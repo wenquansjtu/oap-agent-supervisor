@@ -1,3 +1,4 @@
+import os
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
@@ -51,16 +52,23 @@ def make_child_graphs(cfg: GraphConfigPydantic):
     Instantiate a list of RemoteGraph nodes based on the configuration.
     """
     import re
-    
+
     def sanitize_name(name):
         # Replace spaces with underscores
         sanitized = name.replace(" ", "_")
         # Remove any other disallowed characters (<, >, |, \, /)
-        sanitized = re.sub(r'[<|\\/>]', '', sanitized)
+        sanitized = re.sub(r"[<|\\/>]", "", sanitized)
         return sanitized
 
     return [
-        RemoteGraph(a.agent_id, url=a.deployment_url, name=sanitize_name(a.name)) for a in cfg.agents
+        RemoteGraph(
+            a.agent_id,
+            url=a.deployment_url,
+            name=sanitize_name(a.name),
+            api_key=os.environ.get("LANGSMITH_API_KEY"),
+            headers={"x-auth-scheme": "langsmith"},
+        )
+        for a in cfg.agents
     ]
 
 
@@ -75,7 +83,6 @@ def make_prompt(cfg: GraphConfigPydantic):
 
 
 def graph(config: RunnableConfig):
-
     cfg = GraphConfigPydantic(**config.get("configurable", {}))
     child_graphs = make_child_graphs(cfg)
 
