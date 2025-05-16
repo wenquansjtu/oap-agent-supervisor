@@ -553,7 +553,7 @@ wheels = [
 
 [[package]]
 name = "langgraph"
-version = "0.4.3"
+version = "0.4.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
@@ -563,14 +563,14 @@ dependencies = [
     { name = "pydantic" },
     { name = "xxhash" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/60/9e/5a64602eff18a99d0216a80eff823051ffbdb7c11b5a16171cee8b1ccce5/langgraph-0.4.3.tar.gz", hash = "sha256:272d5d5903f2c2882dbeeba849846a0f2500bd83fb3734a3801ebe64c1a60bdd", size = 125407 }
+sdist = { url = "https://files.pythonhosted.org/packages/85/b6/eafa5f260e10e60c969def1cb26740aa9e57dc49dd1ea133ccbaaf09cf63/langgraph-0.4.5.tar.gz", hash = "sha256:08a8c6577b09cda4e0c16712e762927f00930dabbc7fe235562985ad85891349", size = 128672 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/35/53/0a20edd9f41eb3707722444ec1b43752b792bbe904d1c8cc3ba27f8eb2c8/langgraph-0.4.3-py3-none-any.whl", hash = "sha256:dec926e034f4d440b92a3c52139cb6e9763bc1791e79a6ea53a233309cec864f", size = 151191 },
+    { url = "https://files.pythonhosted.org/packages/f2/2c/052922a444e32371f08eff4a8095e82cb74ed8a80823a9168079ce27211c/langgraph-0.4.5-py3-none-any.whl", hash = "sha256:73f36caae55137c2bdb2a6c59661f0ae29c1516a0d1f4ad4975ad3862865a979", size = 155297 },
 ]
 
 [[package]]
 name = "langgraph-api"
-version = "0.2.21"
+version = "0.2.27"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cloudpickle" },
@@ -593,22 +593,22 @@ dependencies = [
     { name = "uvicorn" },
     { name = "watchfiles" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/ba/590c7f25a95c84196387546fbbcc0d921cf42dcb84c37751c613b92eeb99/langgraph_api-0.2.21.tar.gz", hash = "sha256:6a9802fd9134b188e0bb024b28d1bf413cb04185e096ec76481660e461e4c82f", size = 170317 }
+sdist = { url = "https://files.pythonhosted.org/packages/6c/39/796960b1c6d6196f3119081e6072d5a53797003c9695d576550c5590e346/langgraph_api-0.2.27.tar.gz", hash = "sha256:d53c77456de3888164fde8f1703b050c245aebdab3ba42b1868d4bfe319343f5", size = 172523 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/aa/6a/5cdeb95165bf3e318a215f6a2bd347639da37af7b1db7f940ea25723be04/langgraph_api-0.2.21-py3-none-any.whl", hash = "sha256:fa26b9727b4538158a37b1cbf3fe8f42766bbbbf192aa7abaef092dcb477ae92", size = 205528 },
+    { url = "https://files.pythonhosted.org/packages/8e/0a/d224b694ae1033b90067096cf19ff0628f55053f267cea2c3224cd1e5417/langgraph_api-0.2.27-py3-none-any.whl", hash = "sha256:f2f6ec669e22f2ab6ebaa971573c9b3bdade8d83a968cfa3493de85b154b418b", size = 208097 },
 ]
 
 [[package]]
 name = "langgraph-checkpoint"
-version = "2.0.25"
+version = "2.0.26"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "ormsgpack" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/72/d49828e6929cb3ded1472aa3e5e4a369d292c4f21021ac683d28fbc8f4f8/langgraph_checkpoint-2.0.25.tar.gz", hash = "sha256:77a63cab7b5f84dec1d49db561326ec28bdd48bcefb7fe4ac372069d2609287b", size = 36952 }
+sdist = { url = "https://files.pythonhosted.org/packages/c5/61/e2518ac9216a4e9f4efda3ac61595e3c9e9ac00833141c9688e8d56bd7eb/langgraph_checkpoint-2.0.26.tar.gz", hash = "sha256:2b800195532d5efb079db9754f037281225ae175f7a395523f4bf41223cbc9d6", size = 37874 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/52/bceb5b5348c7a60ef0625ab0a0a0a9ff5d78f0e12aed8cc55c49d5e8a8c9/langgraph_checkpoint-2.0.25-py3-none-any.whl", hash = "sha256:23416a0f5bc9dd712ac10918fc13e8c9c4530c419d2985a441df71a38fc81602", size = 42312 },
+    { url = "https://files.pythonhosted.org/packages/38/48/d7cec540a3011b3207470bb07294a399e3b94b2e8a602e38cb007ce5bc10/langgraph_checkpoint-2.0.26-py3-none-any.whl", hash = "sha256:ad4907858ed320a208e14ac037e4b9244ec1cb5aa54570518166ae8b25752cec", size = 44247 },
 ]
 
 [[package]]
@@ -668,16 +668,16 @@ wheels = [
 
 [[package]]
 name = "langgraph-supervisor"
-version = "0.0.21"
+version = "0.0.22"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "langgraph" },
     { name = "langgraph-prebuilt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/b5/33b6d7f6182353ff96dc5eee9f5c90e878b3fbbb72fabe1ab0731893054a/langgraph_supervisor-0.0.21.tar.gz", hash = "sha256:37ff87db1bc286b62441c5d896fc27e1d628bab0ca583c9f9447117276e0959d", size = 19264 }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/ea/bd0e5f7df3f9a03552126617014ba8955d26d3a92c6ae082db2b82cc975a/langgraph_supervisor-0.0.22.tar.gz", hash = "sha256:b04def1a13acfcbf1f87594ff74c39bd7e535681ba9150711c8dd846541f53d1", size = 20090 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d3/14/9df4a8f8e07057168e2a9c0f3d1d3c47014cb5366a16aa95bfbcfa5dc531/langgraph_supervisor-0.0.21-py3-none-any.whl", hash = "sha256:8cb50aa3baafce92ca798009cb583910b5a97c71dc8317159e402d7ba42eb89b", size = 14445 },
+    { url = "https://files.pythonhosted.org/packages/4a/23/61fd7a8596743f7dccfdddca88fe1f2f759ad463e9ecc0b1c42895e30c2a/langgraph_supervisor-0.0.22-py3-none-any.whl", hash = "sha256:c46ad29129b6f769b1a1dfb57658ab265e34ffbfab38c94a06d73ab2e523faa7", size = 15048 },
 ]
 
 [[package]]
@@ -769,15 +769,15 @@ requires-dist = [
     { name = "aiohttp", specifier = ">=3.8.0" },
     { name = "langchain-core", specifier = "==0.3.59" },
     { name = "langchain-openai", specifier = "==0.3.16" },
-    { name = "langgraph", specifier = "==0.4.3" },
-    { name = "langgraph-supervisor", specifier = ">=0.0.21" },
+    { name = "langgraph", specifier = "==0.4.5" },
+    { name = "langgraph-supervisor", specifier = ">=0.0.22" },
     { name = "pydantic", specifier = "==2.11.3" },
     { name = "supabase", specifier = ">=2.15.1" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "langgraph-api", specifier = "==0.2.21" },
+    { name = "langgraph-api", specifier = "==0.2.27" },
     { name = "langgraph-cli", specifier = "==0.2.10" },
     { name = "langgraph-runtime-inmem", specifier = ">=0.0.11" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
