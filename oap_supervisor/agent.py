@@ -82,7 +82,7 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
             "x-supabase-access-token": access_token,
         }
 
-    def create_entrypoint(agent: AgentsConfig):
+    def create_remote_graph_wrapper(agent: AgentsConfig):
         remote_graph = RemoteGraph(
             agent.agent_id,
             url=agent.deployment_url,
@@ -90,22 +90,23 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
             headers=headers,
         )
 
-        async def foo(state):
+        async def remote_graph_wrapper(state):
+            # Ensure we overwrite the thread ID so that sub-agents do NOT inherit
+            # the thread ID, and thus the config from the parent/previous run.
             thread_id = str(uuid.uuid4())
-            print(f"\n\n\nThread ID: {thread_id}\n\n\n")
             return await remote_graph.ainvoke(
                 state, {"configurable": {"thread_id": thread_id}}
             )
 
         workflow = (
             StateGraph(AgentState)
-            .add_node("remote_graph", foo)
+            .add_node("remote_graph", remote_graph_wrapper)
             .add_edge("__start__", "remote_graph")
         )
 
         return workflow.compile(name=sanitize_name(agent.name))
 
-    return [create_entrypoint(a) for a in cfg.agents]
+    return [create_remote_graph_wrapper(a) for a in cfg.agents]
 
 
 def make_model(cfg: GraphConfigPydantic):
