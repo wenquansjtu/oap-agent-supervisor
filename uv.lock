@@ -780,7 +780,7 @@ dev = [
     { name = "langgraph-api", specifier = "==0.2.21" },
     { name = "langgraph-cli", specifier = "==0.2.10" },
     { name = "langgraph-runtime-inmem", specifier = ">=0.0.11" },
-    { name = "python-dotenv", specifier = ">=1.1.0" },
+    { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "ruff", specifier = ">=0.8.4" },
 ]
 
