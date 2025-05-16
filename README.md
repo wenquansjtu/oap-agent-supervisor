@@ -17,7 +17,7 @@ To run the supervisor locally,
 1. Clone this repo
 
 ```bash
-gh repo clone langchain-ai/open-agent-supervisor
+git clone https://github.com/langchain-ai/open-agent-supervisor.git
 ```
 
 2. Copy the `.env.example` file into `.env`, and set your environment variables
@@ -28,16 +28,26 @@ gh repo clone langchain-ai/open-agent-supervisor
 cp .env.example .env
 ```
 
-4. Install the in-memory LangGraph command line package
+3. Create a new virtual environment, and activate it
 
 ```bash
-pip install -U "langgraph-cli[inmem]"
+uv venv
+source .venv/bin/activate
 ```
 
-4. Run the LangGraph server locally
+4. Install the dependencies, and dev dependencies
 
 ```bash
-langgraph dev
+uv run pip install -e .
+uv run pip install --group dev
+```
+
+5. Run the LangGraph server locally
+
+```bash
+# The --no-browser will disable auto-opening LangGraph studio when the server starts
+# optional, but recommended since the studio is not needed for this project
+uv run langgraph dev --no-browser
 ```
 
 For more info, see our [LangGraph CLI docs](https://langchain-ai.github.io/langgraph/cloud/reference/cli/#dev)
