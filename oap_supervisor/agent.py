@@ -1,9 +1,12 @@
+from langgraph.graph import StateGraph
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from pydantic import BaseModel, Field
+import uuid
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
+from langgraph.prebuilt.chat_agent_executor import AgentState
 
 # This system prompt is ALWAYS included at the bottom of the message.
 UNEDITABLE_SYSTEM_PROMPT = """\nYou can invoke sub-agents by calling tools in this format:
@@ -79,15 +82,31 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
             "x-supabase-access-token": access_token,
         }
 
-    return [
-        RemoteGraph(
-            a.agent_id,
-            url=a.deployment_url,
-            name=sanitize_name(a.name),
+    def create_remote_graph_wrapper(agent: AgentsConfig):
+        remote_graph = RemoteGraph(
+            agent.agent_id,
+            url=agent.deployment_url,
+            name=sanitize_name(agent.name),
             headers=headers,
         )
-        for a in cfg.agents
-    ]
+
+        async def remote_graph_wrapper(state):
+            # Ensure we overwrite the thread ID so that sub-agents do NOT inherit
+            # the thread ID, and thus the config from the parent/previous run.
+            thread_id = str(uuid.uuid4())
+            return await remote_graph.ainvoke(
+                state, {"configurable": {"thread_id": thread_id}}
+            )
+
+        workflow = (
+            StateGraph(AgentState)
+            .add_node("remote_graph", remote_graph_wrapper)
+            .add_edge("__start__", "remote_graph")
+        )
+
+        return workflow.compile(name=sanitize_name(agent.name))
+
+    return [create_remote_graph_wrapper(a) for a in cfg.agents]
 
 
 def make_model(cfg: GraphConfigPydantic):
