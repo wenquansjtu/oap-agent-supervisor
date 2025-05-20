@@ -3,7 +3,6 @@ from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from pydantic import BaseModel, Field
-import uuid
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
 from langgraph.prebuilt.chat_agent_executor import AgentState
@@ -90,13 +89,29 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
             headers=headers,
         )
 
-        async def remote_graph_wrapper(state):
-            # Ensure we overwrite the thread ID so that sub-agents do NOT inherit
-            # the thread ID, and thus the config from the parent/previous run.
-            thread_id = str(uuid.uuid4())
-            return await remote_graph.ainvoke(
-                state, {"configurable": {"thread_id": thread_id}}
-            )
+        async def remote_graph_wrapper(state, config: RunnableConfig):
+            # Filter out keys that are already defined in GraphConfigPydantic
+            # to avoid the child graph inheriting config from the supervisor
+            # (e.g. system_prompt)
+            graph_config_fields = set(GraphConfigPydantic.model_fields.keys())
+
+            if "configurable" in config:
+                config = dict(config)
+                config["configurable"] = {
+                    k: v
+                    for k, v in config["configurable"].items()
+                    if k not in graph_config_fields
+                }
+
+            if "metadata" in config:
+                config = dict(config)
+                config["metadata"] = {
+                    k: v
+                    for k, v in config["metadata"].items()
+                    if k not in graph_config_fields
+                }
+
+            return await remote_graph.ainvoke(state, config)
 
         workflow = (
             StateGraph(AgentState)
