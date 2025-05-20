@@ -668,16 +668,16 @@ wheels = [
 
 [[package]]
 name = "langgraph-supervisor"
-version = "0.0.22"
+version = "0.0.23"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "langgraph" },
     { name = "langgraph-prebuilt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d7/ea/bd0e5f7df3f9a03552126617014ba8955d26d3a92c6ae082db2b82cc975a/langgraph_supervisor-0.0.22.tar.gz", hash = "sha256:b04def1a13acfcbf1f87594ff74c39bd7e535681ba9150711c8dd846541f53d1", size = 20090 }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/95/9007bfdfea7983260a4718ea5e3a62d73a2e526ae7d86db6b3a855d7ded0/langgraph_supervisor-0.0.23.tar.gz", hash = "sha256:a7f08dbfb6c219281f40a8aa269b184062f02e01949f3ebefe50baaa33f1aa32", size = 20189 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4a/23/61fd7a8596743f7dccfdddca88fe1f2f759ad463e9ecc0b1c42895e30c2a/langgraph_supervisor-0.0.22-py3-none-any.whl", hash = "sha256:c46ad29129b6f769b1a1dfb57658ab265e34ffbfab38c94a06d73ab2e523faa7", size = 15048 },
+    { url = "https://files.pythonhosted.org/packages/c8/32/6a36105a617081c815be2a8e9c5bd69bc84acfc8c4a74647751acc94abe5/langgraph_supervisor-0.0.23-py3-none-any.whl", hash = "sha256:f2acd17afb175e962d11d44a9678cc11c4a2df6e0c2627503f14d7ef30dea5a9", size = 15164 },
 ]
 
 [[package]]
@@ -770,7 +770,7 @@ requires-dist = [
     { name = "langchain-core", specifier = "==0.3.59" },
     { name = "langchain-openai", specifier = "==0.3.16" },
     { name = "langgraph", specifier = "==0.4.5" },
-    { name = "langgraph-supervisor", specifier = ">=0.0.22" },
+    { name = "langgraph-supervisor", specifier = ">=0.0.23" },
     { name = "pydantic", specifier = "==2.11.3" },
     { name = "supabase", specifier = ">=2.15.1" },
 ]
