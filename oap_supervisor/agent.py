@@ -3,7 +3,6 @@ from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from pydantic import BaseModel, Field
-import uuid
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
 from langgraph.prebuilt.chat_agent_executor import AgentState
@@ -95,21 +94,23 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
             # to avoid the child graph inheriting config from the supervisor
             # (e.g. system_prompt)
             graph_config_fields = set(GraphConfigPydantic.model_fields.keys())
-            
+
             if "configurable" in config:
                 config = dict(config)
                 config["configurable"] = {
-                    k: v for k, v in config["configurable"].items()
+                    k: v
+                    for k, v in config["configurable"].items()
                     if k not in graph_config_fields
                 }
 
             if "metadata" in config:
                 config = dict(config)
                 config["metadata"] = {
-                    k: v for k, v in config["metadata"].items()
+                    k: v
+                    for k, v in config["metadata"].items()
                     if k not in graph_config_fields
                 }
-            
+
             return await remote_graph.ainvoke(state, config)
 
         workflow = (
