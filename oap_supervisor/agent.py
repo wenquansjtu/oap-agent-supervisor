@@ -1,11 +1,9 @@
-from langgraph.graph import StateGraph
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
-from langgraph.prebuilt.chat_agent_executor import AgentState
 
 # This system prompt is ALWAYS included at the bottom of the message.
 UNEDITABLE_SYSTEM_PROMPT = """\nYou can invoke sub-agents by calling tools in this format:
@@ -49,7 +47,7 @@ class GraphConfigPydantic(BaseModel):
     )
 
 
-class OurRemoteGraph(RemoteGraph):
+class OAPRemoteGraph(RemoteGraph):
     def _sanitize_config(self, config: RunnableConfig) -> RunnableConfig:
         """Sanitize the config to remove non-serializable fields."""
         sanitized = super()._sanitize_config(config)
@@ -109,7 +107,7 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
         }
 
     def create_remote_graph_wrapper(agent: AgentsConfig):
-        return OurRemoteGraph(
+        return OAPRemoteGraph(
             agent.agent_id,
             url=agent.deployment_url,
             name=sanitize_name(agent.name),
