@@ -1,11 +1,9 @@
-from langgraph.graph import StateGraph
 from langgraph.pregel.remote import RemoteGraph
 from langchain_openai import ChatOpenAI
 from langgraph_supervisor import create_supervisor
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from langchain_core.runnables import RunnableConfig
-from langgraph.prebuilt.chat_agent_executor import AgentState
 
 # This system prompt is ALWAYS included at the bottom of the message.
 UNEDITABLE_SYSTEM_PROMPT = """\nYou can invoke sub-agents by calling tools in this format:
@@ -49,6 +47,33 @@ class GraphConfigPydantic(BaseModel):
     )
 
 
+class OAPRemoteGraph(RemoteGraph):
+    def _sanitize_config(self, config: RunnableConfig) -> RunnableConfig:
+        """Sanitize the config to remove non-serializable fields."""
+        sanitized = super()._sanitize_config(config)
+
+        # Filter out keys that are already defined in GraphConfigPydantic
+        # to avoid the child graph inheriting config from the supervisor
+        # (e.g. system_prompt)
+        graph_config_fields = set(GraphConfigPydantic.model_fields.keys())
+
+        if "configurable" in sanitized:
+            sanitized["configurable"] = {
+                k: v
+                for k, v in sanitized["configurable"].items()
+                if k not in graph_config_fields
+            }
+
+        if "metadata" in sanitized:
+            sanitized["metadata"] = {
+                k: v
+                for k, v in sanitized["metadata"].items()
+                if k not in graph_config_fields
+            }
+
+        return sanitized
+
+
 def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = None):
     """
     Instantiate a list of RemoteGraph nodes based on the configuration.
@@ -82,44 +107,12 @@ def make_child_graphs(cfg: GraphConfigPydantic, access_token: Optional[str] = No
         }
 
     def create_remote_graph_wrapper(agent: AgentsConfig):
-        remote_graph = RemoteGraph(
+        return OAPRemoteGraph(
             agent.agent_id,
             url=agent.deployment_url,
             name=sanitize_name(agent.name),
             headers=headers,
         )
-
-        async def remote_graph_wrapper(state, config: RunnableConfig):
-            # Filter out keys that are already defined in GraphConfigPydantic
-            # to avoid the child graph inheriting config from the supervisor
-            # (e.g. system_prompt)
-            graph_config_fields = set(GraphConfigPydantic.model_fields.keys())
-
-            if "configurable" in config:
-                config = dict(config)
-                config["configurable"] = {
-                    k: v
-                    for k, v in config["configurable"].items()
-                    if k not in graph_config_fields
-                }
-
-            if "metadata" in config:
-                config = dict(config)
-                config["metadata"] = {
-                    k: v
-                    for k, v in config["metadata"].items()
-                    if k not in graph_config_fields
-                }
-
-            return await remote_graph.ainvoke(state, config)
-
-        workflow = (
-            StateGraph(AgentState)
-            .add_node("remote_graph", remote_graph_wrapper)
-            .add_edge("__start__", "remote_graph")
-        )
-
-        return workflow.compile(name=sanitize_name(agent.name))
 
     return [create_remote_graph_wrapper(a) for a in cfg.agents]
 
