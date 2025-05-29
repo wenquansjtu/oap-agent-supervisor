@@ -38,8 +38,7 @@ source .venv/bin/activate
 4. Install the dependencies, and dev dependencies
 
 ```bash
-uv run pip install -e .
-uv run pip install --group dev
+uv sync
 ```
 
 5. Run the LangGraph server locally
